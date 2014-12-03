@@ -11,9 +11,12 @@ GET
         "updated": <datetime>
         "players": [
             {
-                "name": <string name>
+                "id": <id>,
+                "name": <string>,
+                "character_name": <string>,
+                "email": <string>
             }...
-        ],
+        ]
     }...
 ]
 ```
@@ -35,9 +38,12 @@ GET
     "gm": <string user>,
     "players": [
         {
-            "name": <string name>
+            "id": <id>,
+            "name": <string>,
+            "character_name": <string>,
+            "email": <string>
         }..
-    ],
+    ]
 }
 ```
 
@@ -64,6 +70,12 @@ GET
 ```
 
 POST
+```json
+{
+    "name": <string name>,
+    "created": <datetime>
+}
+```
 
 ##/campaigns/##/sessions/##
 GET
@@ -177,9 +189,47 @@ POST
 DELETE
 
 ##/campaigns/##/players
+GET
+```json
+[
+    {
+        "id": <id>,
+        "name": <string>,
+        "character_name": <string>,
+        "email": <string>
+    }...
+]
+```
+
 POST
+```json
+{
+    "name": <string>,
+    "character_name": <string>,
+    "email": <string>
+}
+```
 
 ##/campaigns/##/players/##
+GET
+```json
+{
+    "id": <id>,
+    "name": <string>,
+    "character_name": <string>,
+    "email": <string>
+}
+```
+
+POST
+```json
+{
+    "name": <string>,
+    "character_name": <string>,
+    "email": <string>
+}
+```
+
 DELETE
 
 ##/campaigns/##/players/##/loot
@@ -188,32 +238,6 @@ see */loot
 ##/campaigns/##/players/##/loot/##
 see */loot/##
 
-##/campaigns/##/loot
-GET
-```json
-[
-    {
-        "id": <id>,
-        "name": <string>,
-        "type": <string>,
-        "price": <float>,
-        "quantity": <int>,
-        "sale_percent": <float>,
-        "weight": <float>,
-        "owner": <string, player name or null>,
-        "transactions": [
-            {
-                "id": <id>,
-                "session_id": <id>,
-                "owner": <string>,
-                "date": <datetime>,
-                "notes": <string>
-            }
-        ]
-    }...
-]
-```
-POST
 
 ##/campaigns/##/loot
 see */loot
@@ -246,7 +270,18 @@ GET
     }...
 ]
 ```
+
 POST
+```json
+{
+    "name": <string>,
+    "type": <string>,
+    "price": <float>,
+    "quantity": <int>,
+    "sale_percent": <float>,
+    "weight": <float>
+}
+```
 
 ##*/loot/##
 GET
