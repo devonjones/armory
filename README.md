@@ -1,5 +1,5 @@
 # Campaigns
-##/campaigns/
+## /campaigns/
 GET
 ```json
 [
@@ -8,7 +8,7 @@ GET
         "name": <string name>,
         "gm": <string user>,
         "created": <datetime>,
-        "updated": <datetime>
+        "updated": <datetime>,
         "players": [
             {
                 "id": <id>,
@@ -29,19 +29,23 @@ POST
 }
 ```
 
-##/campaigns/##
+## /campaigns/##
 GET
 ```json
 {
     "id": <string uuid>,
     "name": <string name>,
     "gm": <string user>,
+    "created": <datetime>,
+    "updated": <datetime>,
     "players": [
         {
             "id": <id>,
             "name": <string>,
             "character_name": <string>,
-            "email": <string>
+            "email": <string>,
+            "created": <datetime>,
+            "updated": <datetime>
         }..
     ]
 }
@@ -57,7 +61,7 @@ POST
 
 DELETE
 
-##/campaigns/##/sessions
+## /campaigns/##/sessions
 GET
 ```json
 [
@@ -77,7 +81,7 @@ POST
 }
 ```
 
-##/campaigns/##/sessions/##
+## /campaigns/##/sessions/##
 GET
 ```json
 {
@@ -96,13 +100,15 @@ POST
 
 DELETE
 
-##/campaigns/##/encounters
+## /campaigns/##/encounters
 GET
 ```json
 [
     {
         "id": <id>,
-        "name": <string name>
+        "name": <string name>,
+        "created": <datetime>,
+        "updated": <datetime>
     }...
 ]
 ```
@@ -114,12 +120,14 @@ POST
 }
 ```
 
-##/campaigns/##/encounters/##
+## /campaigns/##/encounters/##
 GET
 ```json
 {
     "id": <id>,
-    "name": <string name>
+    "name": <string name>,
+    "created": <datetime>,
+    "updated": <datetime>
 }
 ```
 
@@ -132,7 +140,7 @@ POST
 
 DELETE
 
-##/campaigns/##/encounters/##/items
+## /campaigns/##/encounters/##/items
 GET
 ```json
 [
@@ -143,7 +151,9 @@ GET
         "price": <float>,
         "quantity": <int>,
         "sale_percent": <float>,
-        "weight": <float>
+        "weight": <float>,
+        "created": <datetime>,
+        "updated": <datetime>
     }...
 ]
 ```
@@ -156,11 +166,11 @@ POST
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>
+    "weight": <float>,
 }
 ```
 
-##/campaigns/##/encounters/##/items/#
+## /campaigns/##/encounters/##/items/##
 GET
 ```json
 {
@@ -170,7 +180,9 @@ GET
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>
+    "weight": <float>,
+    "created": <datetime>,
+    "updated": <datetime>
 }
 ```
 
@@ -188,7 +200,7 @@ POST
 
 DELETE
 
-##/campaigns/##/players
+## /campaigns/##/players
 GET
 ```json
 [
@@ -196,7 +208,9 @@ GET
         "id": <id>,
         "name": <string>,
         "character_name": <string>,
-        "email": <string>
+        "email": <string>,
+        "created": <datetime>,
+        "updated": <datetime>
     }...
 ]
 ```
@@ -210,14 +224,16 @@ POST
 }
 ```
 
-##/campaigns/##/players/##
+## /campaigns/##/players/##
 GET
 ```json
 {
     "id": <id>,
     "name": <string>,
     "character_name": <string>,
-    "email": <string>
+    "email": <string>,
+    "created": <datetime>,
+    "updated": <datetime>
 }
 ```
 
@@ -232,20 +248,20 @@ POST
 
 DELETE
 
-##/campaigns/##/players/##/loot
+## /campaigns/##/players/##/loot
 see */loot
 
-##/campaigns/##/players/##/loot/##
+## /campaigns/##/players/##/loot/##
 see */loot/##
 
 
-##/campaigns/##/loot
+## /campaigns/##/loot
 see */loot
 
-##/campaigns/##/loot/##
+## /campaigns/##/loot/##
 see */loot/##
 
-##*#/loot
+## *#/loot
 GET
 ```json
 [
@@ -258,13 +274,16 @@ GET
         "sale_percent": <float>,
         "weight": <float>,
         "owner": <string, player name or null>,
+        "created": <datetime>,
+        "updated": <datetime>,
         "transactions": [
             {
                 "id": <id>,
                 "session_id": <id>,
                 "owner": <string>,
-                "date": <datetime>,
-                "notes": <string>
+                "notes": <string>,
+                "created": <datetime>,
+                "updated": <datetime>
             }
         ]
     }...
@@ -283,7 +302,7 @@ POST
 }
 ```
 
-##*/loot/##
+## */loot/##
 GET
 ```json
 {
@@ -295,14 +314,17 @@ GET
     "sale_percent": <float>,
     "weight": <float>,
     "owner": <string, player name or null>,
+    "created": <datetime>,
+    "updated": <datetime>,
     "transactions": [
         {
             "id": <id>,
             "session_id": <id>,
             "owner": <string>,
-            "date": <datetime>,
             "notes": <string>,
-            "price": <float>
+            "price": <float>,
+            "created": <datetime>,
+            "updated": <datetime>
         }
     ]
 }...
@@ -331,8 +353,9 @@ GET
         "id": <id>,
         "session_id": <id>,
         "owner": <string>,
-        "date": <datetime>,
         "notes": <string>
+        "created": <datetime>,
+        "updated": <datetime>
     }
 ]
 ```
@@ -346,8 +369,9 @@ GET
     "id": <id>,
     "session_id": <id>,
     "owner": <string>,
-    "date": <datetime>,
-    "notes": <string>
+    "notes": <string>,
+    "created": <datetime>,
+    "updated": <datetime>
 }
 ```
 
@@ -356,7 +380,6 @@ POST
 {
     "session_id": <id>,
     "owner": <string>,
-    "date": <datetime>,
     "notes": <string>
 }
 ```
