@@ -1,3 +1,20 @@
+# User
+## /user/
+GET
+```json
+{
+    "email": <string email>,
+    "name": <string name>
+}
+```
+
+POST
+```json
+{
+    "name": <string name>
+}
+```
+
 # Campaigns
 ## /campaigns/
 GET

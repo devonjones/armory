@@ -13,8 +13,10 @@ libraries:
 handlers:
 - url: /
   script: home.application
-- url: /index\.html
-  script: home.app
+- url: /user
+  script: home.application
+- url: /campaign
+  script: home.application
 - url: /stylesheets
   static_dir: stylesheets
 - url: /javascript
