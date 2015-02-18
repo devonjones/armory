@@ -46,17 +46,6 @@ POST (done)
 }
 ```
 
-## /campaigns/token
-POST (done)
-Adds player to a campaign with that token
-```json
-{
-    "token": <string token>,
-    "character_name": <string character name (optional)>
-}
-```
-
-regenerates the campaign token, can only be called by the owner.
 
 ## /campaigns/##
 GET (done)
@@ -91,7 +80,7 @@ POST (done)
 DELETE (done)
 
 ## /campaigns/##/players
-GET
+GET (done)
 ```json
 [
     {
@@ -105,17 +94,8 @@ GET
 ]
 ```
 
-POST
-```json
-{
-    "name": <string>,
-    "character_name": <string>,
-    "email": <string>
-}
-```
-
 ## /campaigns/##/players/##
-GET
+GET (done)
 ```json
 {
     "id": <id>,
@@ -127,28 +107,29 @@ GET
 }
 ```
 
-POST
+POST (done)
 ```json
 {
-    "name": <string>,
-    "character_name": <string>,
-    "email": <string>
+    "character_name": <string>
 }
 ```
 
-DELETE
+DELETE (done)
+
+## /campaigns/token
+POST (done)
+Adds player to a campaign with that token
+```json
+{
+    "token": <string token>,
+    "character_name": <string character name (optional)>
+}
+```
 
 ## /campaigns/##/token
 
 DELETE (done)
 regenerates the campaign token, can only be called by the owner.
-
-
-
-
-
-
-
 
 ## /campaigns/##/sessions
 GET

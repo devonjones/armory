@@ -10,7 +10,6 @@ from google.appengine.ext import ndb
 import jinja2
 import webapp2
 
-
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 	extensions=['jinja2.ext.autoescape'],
@@ -75,40 +74,6 @@ class CampaignsResource(webapp2.RequestHandler):
 		self.response.write("%s\n" % json.dumps(
 			new_campaign.to_json(), indent=2))
 
-class CampaignsTokenResource(webapp2.RequestHandler):
-	def post(self):
-		data = json.loads(self.request.body)
-		account = Account.get_account(users.get_current_user())
-		q = Campaign.query(
-				Campaign.token == data["token"])
-		r = q.fetch(1)
-		if len(r) > 0:
-			campaign = r[0]
-			if campaign.owner == account.key:
-				self.response.status = 403
-				self.response.headers["Content-Type"] = "application/json"
-				self.response.write("%s\n" % json.dumps(
-					{"error": "Can't join a campaign you are the GM of"}, indent=2))
-				return
-			r = Player.query(ancestor=campaign.key).fetch()
-			for player in r:
-				if player.account == account.key:
-					self.response.status = 403
-					self.response.headers["Content-Type"] = "application/json"
-					self.response.write("%s\n" % json.dumps(
-						{"error": "Already a member of campaign"}, indent=2))
-					return
-			new_player = Player(
-				account=account.key,
-				character_name=data.get("character_name"),
-				parent=campaign.key)
-			new_player.put()
-			self.response.headers["Content-Type"] = "application/json"
-			self.response.write("%s\n" % json.dumps(campaign.to_json(), indent=2))
-			return
-		else:
-			self.response.status = 404
-
 class CampaignResource(webapp2.RequestHandler):
 	def get(self, campaign_id):
 		account = Account.get_account(users.get_current_user())
@@ -152,6 +117,110 @@ class CampaignResource(webapp2.RequestHandler):
 		campaign.key.delete()
 		self.response.status = 204
 
+class CampaignPlayersResource(webapp2.RequestHandler):
+	def get(self, campaign_id):
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		if campaign == None:
+			self.response.status = 404
+			return
+		if not campaign.access_allowed(account):
+			self.response.status = 403
+			return
+		players = []
+		r = Player.query(ancestor=campaign.key).fetch()
+		for player in r:
+			retval["players"].append(player.to_json())
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(players, indent=2))
+
+class CampaignPlayerResource(webapp2.RequestHandler):
+	def get(self, campaign_id, player_id):
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		pk = ndb.Key("Campaign", int(campaign_id), "Player", int(player_id))
+		player = pk.get()
+		if campaign == None or player == None:
+			self.response.status = 404
+			return
+		if not campaign.admin_access_allowed(account):
+			if player.account != account.key:
+				self.response.status = 403
+				return
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(player.to_json(), indent=2))
+
+	def post(self, campaign_id, player_id):
+		data = json.loads(self.request.body)
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		pk = ndb.Key("Campaign", int(campaign_id), "Player", int(player_id))
+		player = pk.get()
+		if campaign == None or player == None:
+			self.response.status = 404
+			return
+		if not campaign.admin_access_allowed(account):
+			if player.account != account.key:
+				self.response.status = 403
+				return
+		player.character_name = data["character_name"]
+		player.put()
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(player.to_json(), indent=2))
+
+	def delete(self, campaign_id, player_id):
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		pk = ndb.Key("Campaign", int(campaign_id), "Player", int(player_id))
+		player = pk.get()
+		if campaign == None or player == None:
+			self.response.status = 404
+			return
+		if not campaign.admin_access_allowed(account):
+			if player.account != account.key:
+				self.response.status = 403
+				return
+		player.key.delete()
+		self.response.status = 204
+
+class CampaignsTokenResource(webapp2.RequestHandler):
+	def post(self):
+		data = json.loads(self.request.body)
+		account = Account.get_account(users.get_current_user())
+		q = Campaign.query(
+				Campaign.token == data["token"])
+		r = q.fetch(1)
+		if len(r) > 0:
+			campaign = r[0]
+			if campaign.owner == account.key:
+				self.response.status = 403
+				self.response.headers["Content-Type"] = "application/json"
+				self.response.write("%s\n" % json.dumps(
+					{"error": "Can't join a campaign you are the GM of"}, indent=2))
+				return
+			r = Player.query(ancestor=campaign.key).fetch()
+			for player in r:
+				if player.account == account.key:
+					self.response.status = 403
+					self.response.headers["Content-Type"] = "application/json"
+					self.response.write("%s\n" % json.dumps(
+						{"error": "Already a member of campaign"}, indent=2))
+					return
+			new_player = Player(
+				account=account.key,
+				character_name=data.get("character_name"),
+				parent=campaign.key)
+			new_player.put()
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(campaign.to_json(), indent=2))
+			return
+		else:
+			self.response.status = 404
+
 class CampaignTokenResource(webapp2.RequestHandler):
 	def delete(self, campaign_id):
 		account = Account.get_account(users.get_current_user())
@@ -173,6 +242,8 @@ application = webapp2.WSGIApplication([
 	(r'/campaigns/token', CampaignsTokenResource),
 	(r'/campaigns/(\d+)', CampaignResource),
 	(r'/campaigns/(\d+)/token', CampaignTokenResource),
+	(r'/campaigns/(\d+)/players', CampaignPlayersResource),
+	(r'/campaigns/(\d+)/players/(\d+)', CampaignPlayerResource),
 	(r'/user', UserResource)
 ], debug=True)
 
