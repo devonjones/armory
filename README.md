@@ -1,6 +1,6 @@
 # User
-## /user/
-GET
+## /user
+GET (done)
 ```json
 {
     "email": <string email>,
@@ -8,7 +8,7 @@ GET
 }
 ```
 
-POST
+POST (done)
 ```json
 {
     "name": <string name>
@@ -16,14 +16,15 @@ POST
 ```
 
 # Campaigns
-## /campaigns/
-GET
+## /campaigns
+GET (done)
 ```json
 [
     {
         "id": <id>,
         "name": <string name>,
         "gm": <string user>,
+        "token": <string access token>,
         "created": <datetime>,
         "updated": <datetime>,
         "players": [
@@ -38,21 +39,33 @@ GET
 ]
 ```
 
-POST
+POST (done)
 ```json
 {
-    "name": <string name>,
-    "gm": <string user>
+    "name": <string name>
 }
 ```
 
+## /campaigns/token
+POST (done)
+Adds player to a campaign with that token
+```json
+{
+    "token": <string token>,
+    "character_name": <string character name (optional)>
+}
+```
+
+regenerates the campaign token, can only be called by the owner.
+
 ## /campaigns/##
-GET
+GET (done)
 ```json
 {
     "id": <string uuid>,
     "name": <string name>,
     "gm": <string user>,
+    "token": <string access token>,
     "created": <datetime>,
     "updated": <datetime>,
     "players": [
@@ -68,15 +81,74 @@ GET
 }
 ```
 
+POST (done)
+```json
+{
+    "name": <string name>
+}
+```
+
+DELETE (done)
+
+## /campaigns/##/players
+GET
+```json
+[
+    {
+        "id": <id>,
+        "name": <string>,
+        "character_name": <string>,
+        "email": <string>,
+        "created": <datetime>,
+        "updated": <datetime>
+    }...
+]
+```
+
 POST
 ```json
 {
-    "name": <string name>,
-    "gm": <string user>
+    "name": <string>,
+    "character_name": <string>,
+    "email": <string>
+}
+```
+
+## /campaigns/##/players/##
+GET
+```json
+{
+    "id": <id>,
+    "name": <string>,
+    "character_name": <string>,
+    "email": <string>,
+    "created": <datetime>,
+    "updated": <datetime>
+}
+```
+
+POST
+```json
+{
+    "name": <string>,
+    "character_name": <string>,
+    "email": <string>
 }
 ```
 
 DELETE
+
+## /campaigns/##/token
+
+DELETE (done)
+regenerates the campaign token, can only be called by the owner.
+
+
+
+
+
+
+
 
 ## /campaigns/##/sessions
 GET
@@ -217,53 +289,6 @@ POST
 
 DELETE
 
-## /campaigns/##/players
-GET
-```json
-[
-    {
-        "id": <id>,
-        "name": <string>,
-        "character_name": <string>,
-        "email": <string>,
-        "created": <datetime>,
-        "updated": <datetime>
-    }...
-]
-```
-
-POST
-```json
-{
-    "name": <string>,
-    "character_name": <string>,
-    "email": <string>
-}
-```
-
-## /campaigns/##/players/##
-GET
-```json
-{
-    "id": <id>,
-    "name": <string>,
-    "character_name": <string>,
-    "email": <string>,
-    "created": <datetime>,
-    "updated": <datetime>
-}
-```
-
-POST
-```json
-{
-    "name": <string>,
-    "character_name": <string>,
-    "email": <string>
-}
-```
-
-DELETE
 
 ## /campaigns/##/players/##/loot
 see */loot

@@ -15,7 +15,9 @@ handlers:
   script: home.application
 - url: /user
   script: home.application
-- url: /campaign
+- url: /campaigns
+  script: home.application
+- url: /campaigns/.*
   script: home.application
 - url: /stylesheets
   static_dir: stylesheets
