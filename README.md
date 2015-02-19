@@ -25,8 +25,8 @@ GET (done)
         "name": <string name>,
         "gm": <string user>,
         "token": <string access token>,
-        "created": <datetime>,
-        "updated": <datetime>,
+        "created_at": <datetime>,
+        "updated_at": <datetime>,
         "players": [
             {
                 "id": <id>,
@@ -55,16 +55,16 @@ GET (done)
     "name": <string name>,
     "gm": <string user>,
     "token": <string access token>,
-    "created": <datetime>,
-    "updated": <datetime>,
+    "created_at": <datetime>,
+    "updated_at": <datetime>,
     "players": [
         {
             "id": <id>,
             "name": <string>,
             "character_name": <string>,
             "email": <string>,
-            "created": <datetime>,
-            "updated": <datetime>
+            "created_at": <datetime>,
+            "updated_at": <datetime>
         }..
     ]
 }
@@ -88,8 +88,8 @@ GET (done)
         "name": <string>,
         "character_name": <string>,
         "email": <string>,
-        "created": <datetime>,
-        "updated": <datetime>
+        "created_at": <datetime>,
+        "updated_at": <datetime>
     }...
 ]
 ```
@@ -102,8 +102,8 @@ GET (done)
     "name": <string>,
     "character_name": <string>,
     "email": <string>,
-    "created": <datetime>,
-    "updated": <datetime>
+    "created_at": <datetime>,
+    "updated_at": <datetime>
 }
 ```
 
@@ -132,22 +132,22 @@ DELETE (done)
 regenerates the campaign token, can only be called by the owner.
 
 ## /campaigns/##/sessions
-GET
+GET (done)
 ```json
 [
     {
         "id": <id>,
         "name": <string name>,
-        "created": <datetime>
+        "created_at": <datetime>
     }...
 ]
 ```
 
-POST
+POST (done)
 ```json
 {
     "name": <string name>,
-    "created": <datetime>
+    "created_at": <datetime>
 }
 ```
 
@@ -157,7 +157,7 @@ GET
 {
     "id": <id>,
     "name": <string name>,
-    "created": <datetime>
+    "created_at": <datetime>
 }
 ```
 
@@ -177,8 +177,8 @@ GET
     {
         "id": <id>,
         "name": <string name>,
-        "created": <datetime>,
-        "updated": <datetime>
+        "created_at": <datetime>,
+        "updated_at": <datetime>
     }...
 ]
 ```
@@ -196,8 +196,8 @@ GET
 {
     "id": <id>,
     "name": <string name>,
-    "created": <datetime>,
-    "updated": <datetime>
+    "created_at": <datetime>,
+    "updated_at": <datetime>
 }
 ```
 
@@ -222,8 +222,8 @@ GET
         "quantity": <int>,
         "sale_percent": <float>,
         "weight": <float>,
-        "created": <datetime>,
-        "updated": <datetime>
+        "created_at": <datetime>,
+        "updated_at": <datetime>
     }...
 ]
 ```
@@ -251,8 +251,8 @@ GET
     "quantity": <int>,
     "sale_percent": <float>,
     "weight": <float>,
-    "created": <datetime>,
-    "updated": <datetime>
+    "created_at": <datetime>,
+    "updated_at": <datetime>
 }
 ```
 
@@ -297,16 +297,16 @@ GET
         "sale_percent": <float>,
         "weight": <float>,
         "owner": <string, player name or null>,
-        "created": <datetime>,
-        "updated": <datetime>,
+        "created_at": <datetime>,
+        "updated_at": <datetime>,
         "transactions": [
             {
                 "id": <id>,
                 "session_id": <id>,
                 "owner": <string>,
                 "notes": <string>,
-                "created": <datetime>,
-                "updated": <datetime>
+                "created_at": <datetime>,
+                "updated_at": <datetime>
             }
         ]
     }...
@@ -337,8 +337,8 @@ GET
     "sale_percent": <float>,
     "weight": <float>,
     "owner": <string, player name or null>,
-    "created": <datetime>,
-    "updated": <datetime>,
+    "created_at": <datetime>,
+    "updated_at": <datetime>,
     "transactions": [
         {
             "id": <id>,
@@ -346,8 +346,8 @@ GET
             "owner": <string>,
             "notes": <string>,
             "price": <float>,
-            "created": <datetime>,
-            "updated": <datetime>
+            "created_at": <datetime>,
+            "updated_at": <datetime>
         }
     ]
 }...
@@ -377,8 +377,8 @@ GET
         "session_id": <id>,
         "owner": <string>,
         "notes": <string>
-        "created": <datetime>,
-        "updated": <datetime>
+        "created_at": <datetime>,
+        "updated_at": <datetime>
     }
 ]
 ```
@@ -393,8 +393,8 @@ GET
     "session_id": <id>,
     "owner": <string>,
     "notes": <string>,
-    "created": <datetime>,
-    "updated": <datetime>
+    "created_at": <datetime>,
+    "updated_at": <datetime>
 }
 ```
 
