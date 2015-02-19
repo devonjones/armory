@@ -131,7 +131,7 @@ class CampaignPlayersResource(webapp2.RequestHandler):
 		players = []
 		r = Player.query(ancestor=campaign.key).fetch()
 		for player in r:
-			retval["players"].append(player.to_json())
+			players.append(player.to_json())
 		self.response.headers["Content-Type"] = "application/json"
 		self.response.write("%s\n" % json.dumps(players, indent=2))
 
