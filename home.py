@@ -15,6 +15,28 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 	extensions=['jinja2.ext.autoescape'],
 	autoescape=True)
 
+class BasePage(object):
+	def cant_see(self):
+		self.response.status = 403
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(
+			{"error": "You don't have permission to see this object"},
+			indent=2))
+
+	def cant_modify(self):
+		self.response.status = 403
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(
+			{"error": "You don't have permission to modify this object"},
+			indent=2))
+
+	def cant_delete(self):
+		self.response.status = 403
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(
+			{"error": "You don't have permission to delete this object"},
+			indent=2))
+
 class MainPage(webapp2.RequestHandler):
 	def get(self):
 		if users.get_current_user():
@@ -84,6 +106,10 @@ class CampaignResource(webapp2.RequestHandler):
 			return
 		if not campaign.access_allowed(account):
 			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to see this object"},
+				indent=2))
 			return
 		self.response.headers["Content-Type"] = "application/json"
 		self.response.write("%s\n" % json.dumps(campaign.to_json(), indent=2))
@@ -98,6 +124,10 @@ class CampaignResource(webapp2.RequestHandler):
 			return
 		if not campaign.admin_access_allowed(account):
 			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to modify this object"},
+				indent=2))
 			return
 		campaign.name = data["name"]
 		campaign.put()
@@ -113,11 +143,15 @@ class CampaignResource(webapp2.RequestHandler):
 			return
 		if not campaign.admin_access_allowed(account):
 			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to delete this object"},
+				indent=2))
 			return
 		campaign.key.delete()
 		self.response.status = 204
 
-class CampaignPlayersResource(webapp2.RequestHandler):
+class PlayersResource(webapp2.RequestHandler):
 	def get(self, campaign_id):
 		account = Account.get_account(users.get_current_user())
 		key = ndb.Key("Campaign", int(campaign_id))
@@ -127,6 +161,10 @@ class CampaignPlayersResource(webapp2.RequestHandler):
 			return
 		if not campaign.access_allowed(account):
 			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to see this object"},
+				indent=2))
 			return
 		players = []
 		r = Player.query(ancestor=campaign.key).fetch()
@@ -135,7 +173,7 @@ class CampaignPlayersResource(webapp2.RequestHandler):
 		self.response.headers["Content-Type"] = "application/json"
 		self.response.write("%s\n" % json.dumps(players, indent=2))
 
-class CampaignPlayerResource(webapp2.RequestHandler):
+class PlayerResource(webapp2.RequestHandler):
 	def get(self, campaign_id, player_id):
 		account = Account.get_account(users.get_current_user())
 		key = ndb.Key("Campaign", int(campaign_id))
@@ -148,6 +186,10 @@ class CampaignPlayerResource(webapp2.RequestHandler):
 		if not campaign.admin_access_allowed(account):
 			if player.account != account.key:
 				self.response.status = 403
+				self.response.headers["Content-Type"] = "application/json"
+				self.response.write("%s\n" % json.dumps(
+					{"error": "You don't have permission to see this object"},
+					indent=2))
 				return
 		self.response.headers["Content-Type"] = "application/json"
 		self.response.write("%s\n" % json.dumps(player.to_json(), indent=2))
@@ -165,6 +207,10 @@ class CampaignPlayerResource(webapp2.RequestHandler):
 		if not campaign.admin_access_allowed(account):
 			if player.account != account.key:
 				self.response.status = 403
+				self.response.headers["Content-Type"] = "application/json"
+				self.response.write("%s\n" % json.dumps(
+					{"error": "You don't have permission to modify this object"},
+					indent=2))
 				return
 		player.character_name = data["character_name"]
 		player.put()
@@ -183,6 +229,10 @@ class CampaignPlayerResource(webapp2.RequestHandler):
 		if not campaign.admin_access_allowed(account):
 			if player.account != account.key:
 				self.response.status = 403
+				self.response.headers["Content-Type"] = "application/json"
+				self.response.write("%s\n" % json.dumps(
+					{"error": "You don't have permission to delete this object"},
+					indent=2))
 				return
 		player.key.delete()
 		self.response.status = 204
@@ -231,10 +281,130 @@ class CampaignTokenResource(webapp2.RequestHandler):
 			return
 		if not campaign.admin_access_allowed(account):
 			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to delete this object"},
+				indent=2))
 			return
 		campaign.token=str(uuid.uuid4())
 		self.response.headers["Content-Type"] = "application/json"
 		self.response.write("%s\n" % json.dumps(campaign.to_json(), indent=2))
+
+class SessionsResource(webapp2.RequestHandler):
+	def get(self, campaign_id):
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		if campaign == None:
+			self.response.status = 404
+			return
+		if not campaign.access_allowed(account):
+			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to see this object"},
+				indent=2))
+			return
+		sessions = []
+		r = Session.query(ancestor=campaign.key).order(Session.created_at).fetch()
+		for session in r:
+			sessions.append(session.to_json())
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(sessions, indent=2))
+
+	def post(self, campaign_id):
+		data = json.loads(self.request.body)
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		if campaign == None:
+			self.response.status = 404
+			return
+		if not campaign.admin_access_allowed(account):
+			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to modify this object"},
+				indent=2))
+			return
+		r = Session.query(ancestor=campaign.key).fetch()
+		name = data.get("name", "Session %s" % (len(r) + 1))
+		new_session = Session(
+			name=name,
+			parent=campaign.key)
+		new_session.put()
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(new_session.to_json(), indent=2))
+		return
+
+class SessionResource(webapp2.RequestHandler):
+	def get(self, campaign_id, session_id):
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		sk = ndb.Key("Campaign", int(campaign_id), "Session", int(session_id))
+		session = sk.get()
+		if campaign == None or session == None:
+			self.response.status = 404
+			return
+		if not campaign.access_allowed(account):
+			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to see this object"},
+				indent=2))
+			return
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(session.to_json(), indent=2))
+
+	def post(self, campaign_id, session_id):
+		data = json.loads(self.request.body)
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		sk = ndb.Key("Campaign", int(campaign_id), "Session", int(session_id))
+		session = sk.get()
+		if campaign == None or session == None:
+			self.response.status = 404
+			return
+		if not campaign.admin_access_allowed(account):
+			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to modify this object"},
+				indent=2))
+			return
+		session.name = data["name"]
+		session.put()
+		self.response.headers["Content-Type"] = "application/json"
+		self.response.write("%s\n" % json.dumps(session.to_json(), indent=2))
+
+	def delete(self, campaign_id, session_id):
+		account = Account.get_account(users.get_current_user())
+		key = ndb.Key("Campaign", int(campaign_id))
+		campaign = key.get()
+		sk = ndb.Key("Campaign", int(campaign_id), "Session", int(session_id))
+		session = sk.get()
+		if campaign == None or session == None:
+			self.response.status = 404
+			return
+		if not campaign.admin_access_allowed(account):
+			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "You don't have permission to delete this object"},
+				indent=2))
+			return
+		if campaign.current_session() != session:
+			self.response.status = 403
+			self.response.headers["Content-Type"] = "application/json"
+			self.response.write("%s\n" % json.dumps(
+				{"error": "Only current session can be deleted"}, indent=2))
+			return
+		#TODO: block from deleting a session if it's in use.
+		session.key.delete()
+		self.response.status = 204
+
 
 application = webapp2.WSGIApplication([
 	(r'/', MainPage),
@@ -242,8 +412,12 @@ application = webapp2.WSGIApplication([
 	(r'/campaigns/token', CampaignsTokenResource),
 	(r'/campaigns/(\d+)', CampaignResource),
 	(r'/campaigns/(\d+)/token', CampaignTokenResource),
-	(r'/campaigns/(\d+)/players', CampaignPlayersResource),
-	(r'/campaigns/(\d+)/players/(\d+)', CampaignPlayerResource),
+	(r'/campaigns/(\d+)/players', PlayersResource),
+	(r'/campaigns/(\d+)/players/(\d+)', PlayerResource),
+	(r'/campaigns/(\d+)/sessions', SessionsResource),
+	(r'/campaigns/(\d+)/sessions/(\d+)', SessionResource),
+#	(r'/campaigns/(\d+)/sessions/(\d+)/notes', NotesResource),
+#	(r'/campaigns/(\d+)/sessions/(\d+)/notes/(\d+)', NoteResource),
 	(r'/user', UserResource)
 ], debug=True)
 
@@ -314,9 +488,11 @@ class Campaign(ndb.Model):
 			"gm": self.owner.get().name,
 			"players": []
 		}
-		r = Player.query(ancestor=self.key).fetch()
-		for player in r:
+		for player in self.players():
 			retval["players"].append(player.to_json())
+		cs = self.current_session()
+		if cs:
+			retval["current_session"] = cs
 		return retval
 
 	def admin_access_allowed(self, account):
@@ -332,3 +508,31 @@ class Campaign(ndb.Model):
 			if player.account == account.key:
 				return True
 		return False
+
+	def current_session(self):
+		r = Session.query(ancestor=self.key).order(-Session.created_at).fetch(1)
+		for session in r:
+			return session
+
+	def players(self):
+		players = []
+		r = Player.query(ancestor=self.key).fetch()
+		for player in r:
+			players.append(player)
+		return players
+
+class Session(ndb.Model):
+	name = ndb.StringProperty()
+	created_at = ndb.DateTimeProperty(auto_now_add=True)
+	updated_at = ndb.DateTimeProperty(auto_now=True)
+
+	def to_json(self):
+		retval = {
+			"id": self.key.id(),
+			"name": self.name,
+			"created_at": self.created_at.isoformat(),
+			"updated_at": self.updated_at.isoformat()
+		}
+		return retval
+
+

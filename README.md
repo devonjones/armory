@@ -34,7 +34,13 @@ GET (done)
                 "character_name": <string>,
                 "email": <string>
             }...
-        ]
+        ],
+        "current_session": {
+            "id": <id>,
+            "name": <string name>,
+            "created_at": <datetime>,
+            "updated_at": <datetime>
+        }
     }...
 ]
 ```
@@ -66,7 +72,13 @@ GET (done)
             "created_at": <datetime>,
             "updated_at": <datetime>
         }..
-    ]
+    ],
+    "current_session": {
+        "id": <id>,
+        "name": <string name>,
+        "created_at": <datetime>,
+        "updated_at": <datetime>
+    }
 }
 ```
 
@@ -138,7 +150,8 @@ GET (done)
     {
         "id": <id>,
         "name": <string name>,
-        "created_at": <datetime>
+        "created_at": <datetime>,
+        "updated_at": <datetime>
     }...
 ]
 ```
@@ -147,24 +160,69 @@ POST (done)
 ```json
 {
     "name": <string name>,
-    "created_at": <datetime>
+    "created_at": <datetime>,
+    "updated_at": <datetime>
 }
 ```
 
 ## /campaigns/##/sessions/##
-GET
+GET (done)
 ```json
 {
     "id": <id>,
     "name": <string name>,
-    "created_at": <datetime>
+    "created_at": <datetime>,
+    "updated_at": <datetime>
+}
+```
+
+POST (done)
+```json
+{
+    "name": <string name>
+}
+```
+
+DELETE (done)
+note: only the current session can be deleted, and only if it's not on any transactions
+
+## /campaigns/##/sessions/##/notes
+GET
+```json
+[
+    {
+        "id": <id>,
+        "owner": <string name>,
+        "notes": <string in markdown>,
+        "public": <boolean>
+    }...
+]
+```
+
+POST
+```json
+{
+    "notes": <string in markdown>,
+    "public": <boolean>
+}
+```
+
+## /campaigns/##/sessions/##/notes/##
+GET
+```json
+{
+    "id": <id>,
+    "owner": <string name>,
+    "notes": <string in markdown>,
+    "public": <boolean>
 }
 ```
 
 POST
 ```json
 {
-    "name": <string name>
+    "notes": <string in markdown>,
+    "public": <boolean>
 }
 ```
 
