@@ -187,46 +187,50 @@ DELETE (done)
 note: only the current session can be deleted, and only if it's not on any transactions
 
 ## /campaigns/##/sessions/##/notes
-GET
+GET (done)
 ```json
 [
     {
         "id": <id>,
         "owner": <string name>,
-        "notes": <string in markdown>,
+        "name": <string name>,
+        "note": <string in markdown>,
         "public": <boolean>
     }...
 ]
 ```
 
-POST
+POST (done)
 ```json
 {
-    "notes": <string in markdown>,
-    "public": <boolean>
+    "name": <string name, optional>,
+    "note": <string in markdown>,
+    "public": <boolean, default=True>
 }
 ```
 
 ## /campaigns/##/sessions/##/notes/##
-GET
+GET (done)
 ```json
 {
     "id": <id>,
     "owner": <string name>,
-    "notes": <string in markdown>,
+    "name": <string name>,
+    "note": <string in markdown>,
     "public": <boolean>
 }
 ```
 
-POST
-```json
+POST (done)
+``json
 {
-    "notes": <string in markdown>,
-    "public": <boolean>
+    "name": <string name, optional>,
+    "note": <string in markdown, optional>,
+    "public": <boolean, optional>
 }
 ```
 
-DELETE
+DELETE (done)
 
 ## /campaigns/##/encounters
 GET
