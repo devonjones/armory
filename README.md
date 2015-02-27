@@ -82,7 +82,7 @@ GET (done)
 }
 ```
 
-POST (done)
+POST (minimal post, all fields optional) (done)
 ```json
 {
     "name": <string name>
@@ -176,7 +176,7 @@ GET (done)
 }
 ```
 
-POST (done)
+POST (minimal post, all fields optional) (done)
 ```json
 {
     "name": <string name>
@@ -221,8 +221,8 @@ GET (done)
 }
 ```
 
-POST (done)
-``json
+POST (minimal post, all fields optional) (done)
+```json
 {
     "name": <string name, optional>,
     "note": <string in markdown, optional>,
@@ -233,19 +233,20 @@ POST (done)
 DELETE (done)
 
 ## /campaigns/##/encounters
-GET
+GET (done)
 ```json
 [
     {
         "id": <id>,
         "name": <string name>,
+        "applied": <session object if encounter has been applied>,
         "created_at": <datetime>,
         "updated_at": <datetime>
     }...
 ]
 ```
 
-POST
+POST (done)
 ```json
 {
     "name": <string name>
@@ -253,24 +254,25 @@ POST
 ```
 
 ## /campaigns/##/encounters/##
-GET
+GET (done)
 ```json
 {
     "id": <id>,
     "name": <string name>,
+    "applied": <session object if encounter has been applied>,
     "created_at": <datetime>,
     "updated_at": <datetime>
 }
 ```
 
-POST
+POST (minimal post, all fields optional) (done)
 ```json
 {
     "name": <string name>
 }
 ```
 
-DELETE
+DELETE (done)
 
 ## /campaigns/##/encounters/##/items
 GET
@@ -279,11 +281,15 @@ GET
     {
         "id": <id>,
         "name": <string>,
+        "description": <string>,
+        "magic": <boolean>,
+        "identified": <boolean>,
         "type": <string>,
         "price": <float>,
         "quantity": <int>,
         "sale_percent": <float>,
-        "weight": <float>,
+        "item": <json item definition>,
+        ....
         "created_at": <datetime>,
         "updated_at": <datetime>
     }...
@@ -294,11 +300,16 @@ POST
 ```json
 {
     "name": <string>,
+    "unidentified_name": <string optional>,
+    "description": <string optional>,
+    "magic": <boolean, default false>,
+    "identified": <boolean default false>,
     "type": <string>,
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>,
+    "item": <json item definition, optional>,
+    ....
 }
 ```
 
@@ -308,25 +319,33 @@ GET
 {
     "id": <id>,
     "name": <string>,
+    "description": <string>,
+    "magic": <boolean>,
+    "identified": <boolean>,
     "type": <string>,
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>,
+    "item": <json item definition>,
+    ....
     "created_at": <datetime>,
     "updated_at": <datetime>
 }
 ```
 
-POST
+POST (minimal post, all fields optional)
 ```json
 {
     "name": <string>,
+    "description": <string>,
+    "magic": <boolean>,
+    "identified": <boolean>,
     "type": <string>,
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>
+    "item": <json item definition>,
+    ....
 }
 ```
 
@@ -357,7 +376,8 @@ GET
         "price": <float>,
         "quantity": <int>,
         "sale_percent": <float>,
-        "weight": <float>,
+        "item": <json item definition>,
+        ....
         "owner": <string, player name or null>,
         "created_at": <datetime>,
         "updated_at": <datetime>,
@@ -383,7 +403,8 @@ POST
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>
+    "item": <json item definition>,
+    ....
 }
 ```
 
@@ -397,7 +418,8 @@ GET
     "quantity": <int>,
     "price": <float>,
     "sale_percent": <float>,
-    "weight": <float>,
+    "item": <json item definition>,
+    ....
     "owner": <string, player name or null>,
     "created_at": <datetime>,
     "updated_at": <datetime>,
@@ -415,7 +437,7 @@ GET
 }...
 ```
 
-POST
+POST (minimal post, all fields optional)
 ```json
 {
     "name": <string>,
@@ -423,7 +445,8 @@ POST
     "price": <float>,
     "quantity": <int>,
     "sale_percent": <float>,
-    "weight": <float>,
+    "item": <json item definition>,
+    ....
     "owner": <string, player name or null>
 }...
 ```
@@ -460,7 +483,7 @@ GET
 }
 ```
 
-POST
+POST (minimal post, all fields optional)
 ```json
 {
     "session_id": <id>,
