@@ -19,7 +19,6 @@ class Account(ndb.Model):
 		if len(r) > 0:
 			return r[0]
 		else:
-			sys.stderr.write("%s\n" % dir(user))
 			new_account = Account(
 				user_id=user.user_id(),
 				email=user.email(),
