@@ -1,4 +1,5 @@
 import json
+import uuid
 import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb
