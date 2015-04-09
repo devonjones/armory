@@ -6,8 +6,10 @@
     <script async="" src="javascript/app.js"></script>
   </head>
   <body>
-    <a href="{{ url|safe }}">{{ url_linktext }}</a>
-    <H1>Armory</H1>
+    <div class='auth_url'>
+      <a href="{{ url|safe }}">{{ url_linktext }}</a>
+    </div>
+
     <div id='main'></div>
   </body>
 </html>
